@@ -99,7 +99,7 @@ class _Paths:
 	@property
 	def nm_base_swt_path(self) -> str:
 		"""Name pattern for HIDE & SEEK output maps generated from SWT output."""
-		return r"NSWT_{coeff_type}{scale}_SKY_128_980mhz1260mhz_30bins_full_L0.fits"
+		return "NSWT_{coeff_type}{scale}_SKY_{nside}_980mhz1260mhz_30bins_full_L0.fits"
 
 
 # Single instance of the internal class

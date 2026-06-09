@@ -266,9 +266,11 @@ def parallel_wavelet_transform(input_map, J, nside, fits_dir, freq_vec):
 	for scale in range(J):
 		for prefix in ['C', 'W']:
 			filename = os.path.join(fits_dir, f"{n_maps}maps_{prefix}{scale}.dat")
-			if not os.path.exists(filename):
-				arr = np.memmap(filename, dtype='float64', mode='w+', shape=(n_maps, npix))
-				del arr  
+			arr = np.memmap(filename, dtype='float64', mode='w+', shape=(n_maps, npix))
+			del arr
+			# if not os.path.exists(filename):
+			# 	arr = np.memmap(filename, dtype='float64', mode='w+', shape=(n_maps, npix))
+			# 	del arr  
 	#***************************************************************************
 	# Realiza wavelet transform para todos os mapas em paralelo
 	start_time = time.time()

@@ -84,6 +84,7 @@ auxf.change_ini(ini_path, section_3, output_map_path, hide_out_path)
 auxf.change_ini(ini_path, section_3, channels_key, n_channels)
 auxf.change_ini(ini_path, section_3, def_seed0, seed_number)
 auxf.change_ini(ini_path, section_4, nside_key, nside_input_map)
+auxf.change_ini(ini_path, section_4, beam_n_channels_key, n_channels)
 auxf.change_ini(ini_path, section_4, freq_min_key, freq_min)
 auxf.change_ini(ini_path, section_4, freq_max_key, freq_max)
 
@@ -145,7 +146,7 @@ while continue_main_iter: # parte do critério de comparação de chi² do final
 				continue
 
 			naivemap_swt = nm_base_swt_path.format(coeff_type=coeff_type,
-												   scale=scale)
+												   scale=scale,nside=nside)
 			swt_tod_path = swt_base_path.format(seed_number=seed_number,
 															coeff_type=coeff_type,
 															scale=scale)

@@ -22,27 +22,22 @@ Auxiliary library for the script "high_resolution_algorithm.py"
 """
 ######################################################################################################################################
 def make_freq_file(freq_min, freq_max, hide_inptpath, seed_number):
-
-	counter = 0
-	new_freq_file = os.path.join(hide_inptpath, f"freqs_bingo_{seed_number}.fits")
-	standart_freq_file = os.path.join(hide_inptpath, "freqs_bingo.fits")
-	with open(new_freq_file) as hdul1, open(standart_freq_file) as hdul0:
-
-		standart_freq_vec = np.array(hdul0[0].data)
-		primary_header = hdul0[0].header
-
-		for freq_idx in (standart_freq_vec):
-			if freq_idx == freq_min: min_idx = counter
-				
-			if freq_idx == freq_max: max_idx = counter
-				
-			counter += 1
-		
-		new_vector = standart_freq_vec[min_idx:max_idx:1]
-		new_primary = fits.PrimaryHDU(data=new_vector, header=primary_header)
 	
-	    new_hdul = fits.HDUList([new_primary])
-	    new_hdul.writeto(new_freq_file, overwrite=True)
+	new_freq_file    = os.path.join(hide_inptpath, f"freqs_bingo_{seed_number}.fits")
+	standart_freq_file = os.path.join(hide_inptpath, "freqs_bingo.fits")
+
+	with fits.open(standart_freq_file) as hdul0:
+		standart_freq_vec = np.array(hdul0[0].data)
+		primary_header    = hdul0[0].header
+
+	min_idx = int(np.argmin(np.abs(standart_freq_vec - freq_min)))
+	max_idx = int(np.argmin(np.abs(standart_freq_vec - freq_max)))
+
+	new_vector  = standart_freq_vec[min_idx : max_idx + 1]
+	new_primary = fits.PrimaryHDU(data=new_vector, header=primary_header)
+	fits.HDUList([new_primary]).writeto(new_freq_file, overwrite=True)
+
+	return new_vector, new_freq_file
 	
 ######################################################################################################################################
 def change_ini(ini_path, section, key, value):
@@ -168,8 +163,8 @@ def execute_parallel_swt(input_map, J, nside, fits_dir, maps_dir, freq_vec, gene
 					   cmap = 'jet',
 					   title=fr'coef. starlet ($w_{{{j+1}}}$)',
 					   unit='mK',  format='%.2e')
-			
-			plt.savefigc(maps_dir, f"output_map_0_w{j+1}.png"), bbox_inches='tight')
+
+			plt.savefig(os.path.join(maps_dir, f"output_map_0_w{i+1}.png"), bbox_inches='tight')
 			plt.close()
 		
 		hp.mollview(imap, norm = 'hist', cmap = 'jet', sub=231, title=r'original', unit='mK',  format='%.2e')
