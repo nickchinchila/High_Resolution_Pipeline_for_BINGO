@@ -279,7 +279,7 @@ def parallel_wavelet_transform(input_map, J, nside, fits_dir, freq_vec):
 	used_cores = np.sum(np.array(ps.cpu_percent(percpu=True, interval=0.1)) > 10)  
 	idle_cores = total_cores - used_cores
 	
-	with mp.Pool(processes=total_cores) as pool:
+	with mp.Pool(processes=idle_cores) as pool:
 		args = [(X[i], i, J, fits_dir, npix, n_maps) for i in range(n_maps)]
 		results = pool.map(wt_one_map, args)
 	

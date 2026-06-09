@@ -22,6 +22,29 @@ Auxiliary library for the script "high_resolution_algorithm.py"
 """
 ######################################################################################################################################
 def make_freq_file(freq_min, freq_max, hide_inptpath, seed_number):
+	"""
+	Creates a new FITS frequency file containing a subset of the standard BINGO
+	frequency vector, selecting only the channels between freq_min and freq_max
+	(inclusive). The file is saved in the HIDE input directory and named after
+	the current seed number to avoid conflicts between pipeline iterations.
+
+	Parameters:
+	freq_min (float): Lower bound frequency in MHz. The channel nearest to this
+					  value in the standard frequency vector will be used as the
+					  first element of the new vector.
+	freq_max (float): Upper bound frequency in MHz. The channel nearest to this
+					  value in the standard frequency vector will be used as the
+					  last element of the new vector.
+	hide_inptpath (str): Path to the HIDE input maps directory where both the
+						 standard frequency file and the new file will be located.
+	seed_number (int): Seed identifier used to name the output file uniquely,
+					   following the pattern freqs_bingo_{seed_number}.fits.
+
+	Returns:
+	tuple:
+		- new_vector (numpy.ndarray): 1D array of selected frequencies in MHz.
+		- new_freq_file (str): Full path to the generated FITS file.
+	"""
 	
 	new_freq_file    = os.path.join(hide_inptpath, f"freqs_bingo_{seed_number}.fits")
 	standart_freq_file = os.path.join(hide_inptpath, "freqs_bingo.fits")
@@ -119,6 +142,8 @@ def execute_parallel_swt(input_map, J, nside, fits_dir, maps_dir, freq_vec, gene
 	maps_dir (str): Directory to save generated images.
 	freq_vec (array-like): Frequency vector associated with the maps.
 	generate_maps (bool): Flag indicating whether to generate images.
+	n_bins (int): Number of frequency bins passed to extract_swt_ffits_memmap
+              to define the memmap shape for the SWT output.
 
 	Returns:
 	None
@@ -148,7 +173,7 @@ def execute_parallel_swt(input_map, J, nside, fits_dir, maps_dir, freq_vec, gene
 			hp.mollview(c[0, i, :],  
 							norm='hist', 
 							cmap='jet',  
-							title=fr'coef. escala ($c_{{{i-1}}}$)', 
+							title=fr'coef. escala ($c_{{{i+1}}}$)', 
 							unit='mK', format='%.2e')
 				
 			plt.savefig(os.path.join(maps_dir, f"output_map_0_c{i+1}.png"), bbox_inches='tight')
@@ -164,7 +189,7 @@ def execute_parallel_swt(input_map, J, nside, fits_dir, maps_dir, freq_vec, gene
 					   title=fr'coef. starlet ($w_{{{j+1}}}$)',
 					   unit='mK',  format='%.2e')
 
-			plt.savefig(os.path.join(maps_dir, f"output_map_0_w{i+1}.png"), bbox_inches='tight')
+			plt.savefig(os.path.join(maps_dir, f"output_map_0_w{j+1}.png"), bbox_inches='tight')
 			plt.close()
 		
 		hp.mollview(imap, norm = 'hist', cmap = 'jet', sub=231, title=r'original', unit='mK',  format='%.2e')

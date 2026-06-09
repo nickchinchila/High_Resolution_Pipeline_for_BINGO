@@ -62,13 +62,13 @@ class _Paths:
 	def base_diff_path(self) -> str:
 		"""Base path of the difference between original TODs and SWT TODs."""
 		
-		return str(self.base / r"output_high_reso_test/seed{seed_number}/tod_difference/diff_J{scale}") + "/"
+		return str(self.base / r"output_high_reso_test/{seed_number}/tod_difference/diff_J{scale}") + "/"
 
 	@property
 	def data_model_base_path(self) -> str:
 		"""Base path of the final data model obtaneid """
 		
-		return str(self.base / r"output_high_reso_test/seed{seed_number}/data_model") + "/"
+		return str(self.base / r"output_high_reso_test/{seed_number}/data_model") + "/"
 		
 	@property
 	def base_bingo_name(self) -> str:
@@ -83,13 +83,13 @@ class _Paths:
 	@property
 	def recons_base_path(self) -> str:
 		"""Base path of the equivalent reconstruction to the difference TOD."""
-		return str(self.base / r"output_high_reso_test/seed{seed_number}/NSWT/Equivalent_recons_J{scale}") + "/"
+		return str(self.base / r"output_high_reso_test/{seed_number}/NSWT/Equivalent_recons_J{scale}") + "/"
 
 	@property
 	def base_chi2_path(self) -> str:
 		"""Base path for all chi-square test results for each hour of each horn at each decomposition scale."""
 		
-		return str(self.base / r"output_high_reso_test/seed{seed_number}/chi2/J{scale}") + "/"
+		return str(self.base / r"output_high_reso_test/{seed_number}/chi2/J{scale}") + "/"
 
 	@property
 	def naivemap_fbase(self) -> str:

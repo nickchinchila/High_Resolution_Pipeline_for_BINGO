@@ -100,22 +100,18 @@ subprocess.run(["python", "run_hide.py", "bingo.py", "bingo_horn", "0", "140"], 
 # original ones, starting with the coarsest scale, calculates the difference 
 # between them, and compares it with the equivalent reconstruction made with the 
 # SWT coefficients. Afterward, quantifies this comparison using a chi-square test 
-# for each hour of each TOD horn  
+# for each hour of each TOD horn  - completar descrição dps
 #------------------------------------------------------------
 idx_main_iteration = 0
 continue_main_iter = True
 chi2_global_values = []
-while continue_main_iter: # parte do critério de comparação de chi² do final
+while continue_main_iter: 
 
 	# Run hitmap.py (with the frequency n_channels in parallel)
 	subprocess.run(["python", "hitmap_bin_parallel.py"], check=True, cwd=hide_dir)
 	#------------------------------------------------------------
 	# Changing the hitmap output format to a SWT input format 
 	naivemap_fname = f"naivemap_signal+noise_SEED{seed_number}_nch{idx_channels}_1d.fits" 
-	# freq_vec = np.array([ 980.0, 989.33,  998.67, 1008.0,   1017.33, 1026.67, 1036.0, 1045.33,
-	# 1054.67, 1064.0,   1073.33, 1082.67, 1092.0,   1101.33, 1110.67, 1120.0,  1129.33, 1138.67,
-	#  1148.0,   1157.33, 1166.67, 1176.0,   1185.33, 1194.67, 1204.0,   1213.33, 1222.67,
-	#  1232.0,   1241.33, 1250.67, 1260.0])
 	hitmap_out_path = auxf.name_split(hitmap_outpath, seed_number)
 
 	naivemap = auxf.combine_fits(os.path.join(hitmap_out_path, naivemap_fbase), nch=n_channels,
@@ -264,7 +260,7 @@ while continue_main_iter: # parte do critério de comparação de chi² do final
 			# Plot the naive maps of the current state of the model
 			path_model_hitmap = os.path.join(model_path, "maps") + os.sep
 			auxf.change_ini(ini_path, section_0, def_seed0, seed_number)
-			auxf.change_ini(ini_path, section_1, outpath, path_model_hitmap)
+			auxf.change_ini(ini_path, section_1, outpath, model_path)
 			auxf.change_ini(ini_path, section_3, output_map_path, path_model_hitmap)
 
 			subprocess.run(["python", "hitmap_bin_parallel.py"], check=True, cwd=hide_dir)
