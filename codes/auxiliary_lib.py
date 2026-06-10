@@ -143,7 +143,7 @@ def execute_parallel_swt(input_map, J, nside, fits_dir, maps_dir, freq_vec, gene
 	freq_vec (array-like): Frequency vector associated with the maps.
 	generate_maps (bool): Flag indicating whether to generate images.
 	n_bins (int): Number of frequency bins passed to extract_swt_ffits_memmap
-              to define the memmap shape for the SWT output.
+			  to define the memmap shape for the SWT output.
 
 	Returns:
 	None
@@ -628,18 +628,37 @@ def store_data_model(data_model_base_path, swt_base_path, positive_scales, seed_
 					sum_D1 += fD["P"]["Phase1"][:]
 			
 			tod_model = C1 + sum_D1
+
+			# data_model_dir = os.path.join(data_model_base_path.format(seed_number=seed_number), "TODs","2020", "03", "01") + os.sep
+			# out_data_model = os.path.join(data_model_dir, fname)
+			# os.makedirs(os.path.dirname(out_data_model), exist_ok=True)
+			tod_base_dir = os.path.join(
+			data_model_base_path.format(seed_number=seed_number),
+			"TODs") + os.sep                           
+			tod_full_dir = os.path.join(
+				tod_base_dir, "2020", "03", "01") + os.sep 
 			
-			data_model_dir = os.path.join(data_model_base_path.format(seed_number=seed_number), "TODs") + os.sep
-			out_data_model = os.path.join(data_model_dir, fname)
-			os.makedirs(os.path.dirname(out_data_model), exist_ok=True)
+			out_data_model = os.path.join(tod_full_dir, fname)
+			os.makedirs(tod_full_dir, exist_ok=True)
+			
 			with h5py.File(out_data_model, 'w') as fmodel:
 				fmodel.create_group("P")
 				fmodel.create_dataset("FREQUENCY", data=F)
 				fmodel.create_dataset("TIME",      data=T)
 				fmodel["P"].create_dataset("Phase0", data=C0)
 				fmodel["P"].create_dataset("Phase1", data=tod_model, compression="gzip")
+
+		source_dir = os.path.join(dir_C, "2020", "03", "01")
+		dest_dir   = tod_full_dir
+		os.makedirs(dest_dir, exist_ok=True)
 		
-	return out_data_model, data_model_dir
+		for pat in [f"coord_bingo_{horn}_{date}.txt",
+					f"params_bingo_{horn}_{date}.txt"]:
+			for src in glob.glob(os.path.join(source_dir, pat)):
+				if os.path.isfile(src):
+					shutil.copy2(src, dest_dir)
+						
+	return out_data_model, tod_base_dir
 #############################################################################################################################################
 
 #############################################################################################################################################
