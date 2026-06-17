@@ -260,7 +260,7 @@ while continue_main_iter:
 			model_base = data_model_base_path.format(seed_number=seed_number)
 
 			# Plot the naive maps of the current state of the model
-			path_model_hitmap = os.path.join(model_base, "maps") + os.sep
+			path_model_hitmap = dcopy(model_base)
 			auxf.change_ini(ini_path, section_0, def_seed0, seed_number)
 			auxf.change_ini(ini_path, section_1, outpath, model_path)
 			auxf.change_ini(ini_path, section_3, output_map_path, path_model_hitmap)

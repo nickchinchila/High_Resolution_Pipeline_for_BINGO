@@ -648,7 +648,7 @@ def store_data_model(data_model_base_path, swt_base_path, positive_scales, seed_
 				fmodel["P"].create_dataset("Phase0", data=C0)
 				fmodel["P"].create_dataset("Phase1", data=tod_model, compression="gzip")
 
-		source_dir = os.path.join(dir_C, "2020", "03", "01")
+		source_dir = os.path.join(data_model_base_path, "2020", "03", "01")
 		dest_dir   = tod_full_dir
 		os.makedirs(dest_dir, exist_ok=True)
 		
