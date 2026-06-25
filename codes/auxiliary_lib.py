@@ -226,7 +226,7 @@ def execute_tod_diff(dir_path1, dir_path2, base_path_diff, corneta, hora, seed0,
 	Parameters:
 	dir_path1 (str): Base directory of the first data set.
 	dir_path2 (str): Directory pattern for the second set with placeholders.
-	file_path_diff (str): Pattern for the output difference path.
+	base_path_diff (str): Pattern for the output difference path.
 	corneta (int): Horn identifier.
 	hora (int): Hour when the TOD was recorded.
 	seed0 (int): Seed value used.
@@ -362,7 +362,7 @@ def process_horn(hour_number, horn, scale, J, hide_outpath, last_base_diff_path,
 	After that, calculate the equivalent reconstruction TOD. 
 
 	Parameters:
-	hour_number (int): Total hours.
+	hour_number (iterable): Iterable containing the hours to be processed.
 	horn (int): Horn indicator.
 	scale (int): Actual scale of the SWT decomposition. 
 	J (int): Total scales of SWT decompostition.
@@ -584,10 +584,10 @@ def store_data_model(data_model_base_path, swt_base_path, positive_scales, seed_
 		chi-square test value and should be included in the model.
 	seed_number : int
 		Seed identifier used to format the output path.
-	horn_number : list 
-		List with all horns identifier.
-	hour_number : list
-		List with all hours identifier for the TODs file.
+	horn_number (int): 
+		Total number of horns to be processed.
+	hour_number (int): 
+		Total number of hours to be processed.
 	J : int
 		Total number of SWT decomposition scales. Used to locate
 		the smoothing coefficient C_{J-1}.
@@ -648,7 +648,8 @@ def store_data_model(data_model_base_path, swt_base_path, positive_scales, seed_
 				fmodel["P"].create_dataset("Phase0", data=C0)
 				fmodel["P"].create_dataset("Phase1", data=tod_model, compression="gzip")
 
-		source_dir = os.path.join(data_model_base_path, "2020", "03", "01")
+		# source_dir = os.path.join(data_model_base_path, "2020", "03", "01")
+		source_dir = os.path.join(dir_C, "2020", "03", "01")
 		dest_dir   = tod_full_dir
 		os.makedirs(dest_dir, exist_ok=True)
 		

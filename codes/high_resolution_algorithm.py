@@ -21,10 +21,7 @@ sys.path.insert(1,'/data/NSOARES/high_resolution_pipeline/codes')
 import auxiliary_lib as auxf
 ##########################################################################################################################
 """ 
- This script aims to evaluate how well the decomposition using
- the Starlet wavelet transform approximates the original data
- and to quantify this analysis through a chi-square test.
- ------------------------------------------------------------
+ ---------------------------------------------------------
  Documentation for auxiliary functions can be found in the 
  file "auxiliary_lib.py". 
 
@@ -96,11 +93,13 @@ subprocess.run(["python", "run_hide.py", "bingo.py", "bingo_horn", "0", "140"], 
 # Main iteration loop: Processes the original TODs into naive maps, 
 # performs the decomposition with SWT, obtaining the WJ and CJ coefficients
 # for all J scales in FITS format, processes the coefficients with HIDE, and 
-# obtains the TODs from SWT. Performs a comparison between the SWT TODs and the
-# original ones, starting with the coarsest scale, calculates the difference 
-# between them, and compares it with the equivalent reconstruction made with the 
-# SWT coefficients. Afterward, quantifies this comparison using a chi-square test 
-# for each hour of each TOD horn  - completar descrição dps
+# obtains the TODs from SWT. Performs a comparison between the SWT TODs and the original ones, 
+# starting with the coarsest scale, calculates the difference between them, and compares 
+# it with the equivalent reconstruction made with the SWT coefficients. Afterward, 
+# quantifies this comparison using a chi-square test for each hour of each TOD horn. 
+# If the chi-square test indicates an improvement in the data modeling, the current 
+# scale is kept; otherwise, the scale is discarded and the difference directory is 
+# restored to its previous state.
 #------------------------------------------------------------
 idx_main_iteration = 0
 continue_main_iter = True
@@ -245,8 +244,6 @@ while continue_main_iter:
 
 			# The current scale improved the chi-square: discard the backup of the
 			# previous scale's difference directory, keeping the updated version.
-			
-			# auxf.restore_diff_directory(base_diff_path, seed_number, scale)
 
 			backup_to_discard = base_diff_path.format(seed_number=seed_number, scale=scale+1).rstrip('/') + '_backup'
 			if os.path.exists(backup_to_discard): shutil.rmtree(backup_to_discard)
@@ -260,7 +257,8 @@ while continue_main_iter:
 			model_base = data_model_base_path.format(seed_number=seed_number)
 
 			# Plot the naive maps of the current state of the model
-			path_model_hitmap = dcopy(model_base)
+			path_model_hitmap = dcopy(model_path)
+			
 			auxf.change_ini(ini_path, section_0, def_seed0, seed_number)
 			auxf.change_ini(ini_path, section_1, outpath, model_path)
 			auxf.change_ini(ini_path, section_3, output_map_path, path_model_hitmap)

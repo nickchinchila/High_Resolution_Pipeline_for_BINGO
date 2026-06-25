@@ -263,8 +263,11 @@ class Chi2_for_Hide_Seek_data:
 			obs_data = data_TOD1[freq_idx, :]
 			exp_data = data_TOD2[freq_idx, :]
 
+			n_samples = len(obs_data)
+			err = self.err_data[:n_samples]
+
 			residuals = obs_data - exp_data
-			chi2 = np.sum((residuals/ self.err_data)**2)
+			chi2 = np.sum((residuals/ err)**2)
 			
 			# reduced_chi2 = chi2 / dof
 			

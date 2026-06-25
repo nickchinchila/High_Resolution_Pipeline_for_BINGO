@@ -1,4 +1,4 @@
-# paths_config_II.py
+# paths_config.py
 
 """
 About Directories
